@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop 
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx 
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+       
+       <!-- 扫描注解 -->
+       <context:component-scan base-package="com.icss.ssm"></context:component-scan>
+       
+       <!-- 配置数据源 C3P0 -->
+        <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+  	    <property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+  	    <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/manage"></property>
+  	    <property name="user" value="root"></property>
+  	    <property name="password" value="root"></property>
+        </bean>
+       
+       <!-- 在基本的 MyBatis 中,session 工厂可以使用 SqlSessionFactoryBuilder 来创建。而在 MyBatis-spring 中,则使用 SqlSessionFactoryBean 来替代。SqlSessionFactoryBean 将spring和mybatis整合 -->
+	   <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+			<property name="dataSource" ref="dataSource" />
+			<property name="configLocation" value="classpath:sqlMapConfig.xml" />
+			<property name="mapperLocations" value="classpath:sqlMap/*.xml" />    <!-- 加载mapper文件 -->
+	   
+	   <!-- 配置mybatis分页插件PageHelper -->
+			<property name="plugins">
+			    <array>
+			        <bean class="com.github.pagehelper.PageInterceptor">
+			             <property name="properties">
+			                 <value>
+			                     helperDialect=mysql
+			                     reasonable=true
+			                     supportMethodsArguments=true
+			                     params=count=countSql
+			                     autoRuntimeDialect=true
+			                 </value>
+			             </property>
+			        </bean>
+			    </array>
+			 </property>
+	   
+	   </bean>
+
+       <!-- dao mapping接口扫描 -->
+		<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+			<property name="basePackage" value=" com.icss.ssm.dao" />
+			<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+		</bean>
+       
+       <!-- 声明式事务配置 -->
+       
+       <!-- 事务管理器 -->
+       <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+         </bean>
+       <!-- 通知 -->
+       <tx:advice id="txAdvice" transaction-manager="txManager">
+        <tx:attributes>
+        <tx:method name="save*" isolation="DEFAULT" propagation="REQUIRED" read-only="false"/>
+        <tx:method name="delete*" isolation="DEFAULT" propagation="REQUIRED" read-only="false"/>
+        <tx:method name="update*" isolation="DEFAULT" propagation="REQUIRED" read-only="false"/>
+        <tx:method name="find*" isolation="DEFAULT" propagation="REQUIRED" read-only="false"/>
+        </tx:attributes>
+        </tx:advice>
+       <!-- 事务切入点和切面 -->
+       <aop:config>
+        <aop:pointcut id="myPointcut" expression="execution(* com.icss.ssm.service.*.*(..))" />
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="myPointcut"/>
+        </aop:config>
+       
+       </beans>

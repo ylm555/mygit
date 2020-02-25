@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.icss.ssm.dao.UserDao">
+  
+ <!--   <resultMap type="user" id="userResultMap">
+ </resultMap> -->
+  <!-- 查询所有用户信息 -->
+  <select id="findAllUser" resultType="user">
+     select * from user
+  </select>
+  
+    <select id="LoginUser" resultType="user" parameterType="string">
+    select * from user where username=#{0} and password=#{1} 
+  </select>   
+  
+  <!-- 查询用户详情 -->
+  <select id="findUserById" parameterType="int" resultType="user">
+  select * from user where id=#{id}
+  </select>
+  
+  <!-- 修改用户角色 -->
+  <update id="updateUserRole">
+     update user set role_id=#{1} where id=#{0}
+  </update>
+  
+  </mapper>

@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+</head>
+
+<body>
+ <form name="userForm" method="post" >
+  		
+		<table width="80%" border="0" cellspacing="2" height="166" align="center" style="font-size:13px" >
+		<tr><td height="48"><br>
+		  <h3>添加角色</h3></td></tr>
+			<tr>
+				<th bgcolor="d3eaef" class="STYLE10">角色名称</th>
+				<td bgcolor="f6f6fd"  class="STYLE19">
+					<input type="text" name="users.usrName" value="" onblur="checkUserExitts()">
+					<span id="exts" style="color:red"></span>			  </td>
+				<th  bgcolor="d3eaef" class="STYLE10">角色描述</th>
+				<td bgcolor="f6f6fd" >
+					<input type="password" name="users.usrPassword" value="" >			  </td>
+			</tr>
+			<tr>
+				<th bgcolor="d3eaef" class="STYLE10">角色状态</th>
+				<td bgcolor="f6f6fd"  class="STYLE19">
+					正常</td>
+				<th bgcolor="d3eaef" class="STYLE10">&nbsp;</th>
+				<td bgcolor="f6f6fd"  >&nbsp;</td>
+			</tr>
+			<tr><td colspan="4"><div class="button_bar" style="text-align:right">
+			<button type="submit" class="common_button" id="sav">保    存</button>
+		</div></td></tr>
+   </table>
+		
+</form>	
+
+</body>
+</html>
